@@ -1,0 +1,12 @@
+table {
+    width: 70%;
+    font-family: Arial;
+}
+
+.sat, .sun {
+    color: red;
+}
+
+th.year {
+    font-weight: bold;
+}

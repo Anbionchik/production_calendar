@@ -1,4 +1,11 @@
+body {
+    align-content: center;
+    margin: 0;
+    padding: 0;
+}
+
 table {
+    margin: 0 auto;
     width: 70%;
     font-family: Arial;
 }
@@ -10,3 +17,4 @@ table {
 th.year {
     font-weight: bold;
 }
+

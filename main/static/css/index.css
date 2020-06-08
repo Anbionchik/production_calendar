@@ -10,8 +10,16 @@ table {
     font-family: Arial;
 }
 
-.sat, .sun {
-    color: red;
+/*.sat, .sun {*/
+/*    color: red;*/
+/*}*/
+
+[id="1"] {
+    color: crimson;
+}
+
+[id="2"] {
+    color: chartreuse;
 }
 
 th.year {

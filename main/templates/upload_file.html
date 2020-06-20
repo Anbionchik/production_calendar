@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Загрузить xml-файл</title>
+</head>
+<body>
+
+<div class="container">
+    <form class="file_form_class" action="" id="file_form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p class="form_class_name-field"> Загрузите файл с датами</p>
+        {{ form.file }}
+        {{ form.force }}
+    </form>
+    <div class="auth__column_right__form_footer">
+    <label class="form_footer_button-submit">
+      <input type="submit" form="file_form" value="">
+      <div class="auth__button_submit" id="submit-btn" ><span>&#10004</span></div>
+    </label>
+    <label class="form_footer_button-cancel">
+        <a href={% url "main" %}>
+            <div class="auth__button_cancel" id="cancel-btn" ><span>&#9587</span></div>
+        </a>
+    </label>
+  </div>
+</div>
+
+
+
+<script>
+
+
+    file_form.onsubmit = async (e) => {
+        e.preventDefault();
+        debugger
+        fetch(e.currentTarget.baseURI, {
+            method: 'POST',
+            headers: new Headers({'X-CSRFToken': token}),
+            body: new FormData(file_form)
+        }).then(function(response) {
+            response.text().then(function (text) {
+                if (text == "Неправильный xml-файл") {
+                    alert("Загруженный файл должен иметь формат xml и соответсвовать шаблону. Загрузите повторно.")
+                } else if (text == "Такой файл уже существует") {
+                    const message = createMessageBlock('Внимание', 'XML-файл для такого года уже существует, заменить?');
+                    body.appendChild(message);
+                    document.getElementById(
+                        'confirm-cancel-btn'
+                    ).addEventListener('click', event => {
+                        deleteMessageBlock(event);
+                        location.replace('/');
+                    });
+                    document.getElementById('confirm-submit-btn').addEventListener(
+                        'click', event => sbmtFunction(event));
+                }
+            });
+        });
+    }
+
+
+
+
+
+    const body = document.getElementsByClassName('container')[0];
+//    const sbmtButton = document.querySelectorAll('#submit-btn');
+
+    {#sbmtButton.forEach(button => {#}
+    {#    button.addEventListener('click', sbmtFunction);#}
+    {#});#}
+
+    function deleteMessageBlock(event) {
+        event.preventDefault();
+        document.getElementById('id_new_edit_block').remove();
+    }
+
+    const token = getCookie('csrftoken');
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            let cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+    function sbmtFunction(event) {
+        event.preventDefault();
+        debugger
+        const url = event.currentTarget.baseURI;
+        fetch(url, {
+            method: 'POST',
+            headers: new Headers({'X-CSRFToken': token}),
+            redirect: 'follow',
+        }).then(response => {
+            if (response.status === 201) {
+            } else {
+                alert('Сервер не доступен');
+            }
+        })
+
+    }
+
+    function createMessageBlock(title, text) {
+        const divBlock = document.createElement('div');
+        divBlock.className = 'wrapper__auth';
+        divBlock.id = 'id_new_edit_block';
+        divBlock.innerHTML = `<div class="auth__column_right">
+	<div class="auth__column_right_form">
+		<div class="auth__column_right_form__header">
+			${ title }
+		</div>
+		<div id="message_text">
+			${ text }
+		</div>
+		<div class="auth__column_right__form_footer">
+			<label class="form_footer_button-submit">
+				<a href="#" id="confirm-submit_btn">
+					<div id="confirm-submit-btn" class="auth__button_submit"  >
+						<span>&#10004</span>
+					</div>
+				</a>
+			</label>
+			<label class="form_footer_button-cancel">
+				<a href="#" id="confirm-cancel-btn">
+					<div class="auth__button_submit" id="confirm-cancel-btn" >
+						<span>&#9587</span>
+					</div>
+				</a>
+			</label>
+		</div>
+	</div>
+</div>`;
+        return divBlock;
+    }
+
+</script>
+
+</body>
+
+</html>

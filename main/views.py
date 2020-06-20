@@ -1,18 +1,45 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse, redirect
+from django.http import HttpResponseRedirect, HttpResponse
+from .forms import UploadFileForm
 from django.utils.safestring import mark_safe
+from main.calendar_files.files_handler import uploaded_file_check, rewrite
 import calendar
 from main.calendar_files.calendar_xml_handler import calendar_xml_handler
+import pickle
 
 
 def main_view(request):
-    year = 2013
-    weekends_list = calendar_xml_handler(2013)
+    with open('C:/Users/Андрей/PycharmProjects/production_calendar/main/calendar_files/presented_years.txt', 'rb+') as file_with_years:
+        v = pickle.load(file_with_years)
+        context = {
+            'years': v,
+        }
+    return render(request, 'index.html', context)
+
+
+def show_year_view(request, pk):
+    year = pk
+    weekends_list = calendar_xml_handler(year)
     work_calendar = ProductionCalendar(firstweekday=0, weekends_list=weekends_list)
     htmlcalendarik = work_calendar.formatyear(year, width=3)
     context = {
         'calendarik': mark_safe(htmlcalendarik),
     }
-    return render(request, 'index.html', context)
+    return render(request, 'year.html', context)
+
+
+def upload_new_year_view(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+
+            result = uploaded_file_check(request.FILES['file'])
+            if result:
+                return HttpResponse(result)
+        return HttpResponseRedirect('/')
+    else:
+        form = UploadFileForm()
+    return render(request, 'upload_file.html', {'form': form})
 
 # TODO Переделать все эти переопределения родительских методов нормально
 
@@ -50,7 +77,7 @@ class ProductionCalendar(calendar.HTMLCalendar):
         """
         v = []
         a = v.append
-        a('<table border="0" cellpadding="0" cellspacing="0" class="%s">' % (
+        a('<table border="0" cellpadding="0" cellspacing="0" class="%s" id="selectable">' % (
             self.cssclass_month))
         a('\n')
         a(self.formatmonthname(theyear, themonth, withyear=withyear))
@@ -69,4 +96,4 @@ class ProductionCalendar(calendar.HTMLCalendar):
         Return a complete week as a table row.
         """
         s = ''.join(self.formatday(d, wd, themonth) for (d, wd) in theweek)
-        return '<tr>%s</tr>' % s
+        return '<tr id="selectable">%s</tr>' % s

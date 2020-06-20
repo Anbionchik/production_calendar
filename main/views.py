@@ -1,5 +1,5 @@
-from django.shortcuts import render, reverse, redirect
-from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render
+from django.http import HttpResponse
 from .forms import UploadFileForm
 from django.utils.safestring import mark_safe
 from main.calendar_files.files_handler import uploaded_file_check, rewrite
@@ -41,16 +41,14 @@ def upload_new_year_view(request):
         form = UploadFileForm()
     return render(request, 'upload_file.html', {'form': form})
 
-# TODO Переделать все эти переопределения родительских методов нормально
-
 
 class ProductionCalendar(calendar.HTMLCalendar):
 
     def __init__(self, weekends_list, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.weekend_days = []
+        self.weekend_days = {}
         for _ in weekends_list:
-            self.weekend_days.append(_.get('d'))
+            self.weekend_days[_.get('d')] = _.get('t')
         self.weekends_list = weekends_list
 
     def formatday(self, day, weekday, themonth):
@@ -59,9 +57,9 @@ class ProductionCalendar(calendar.HTMLCalendar):
         """
         check = '%02i.%02i' % (themonth, day)
         if check in self.weekend_days:
-            id_day = 2
+            id_day = self.weekend_days[check]
         elif weekday in (5, 6):
-            id_day = 1
+            id_day = 4
         else:
             id_day = 0
 

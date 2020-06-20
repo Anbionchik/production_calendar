@@ -5,22 +5,30 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/static/css/index.css">
     <title>Загрузить xml-файл</title>
 </head>
 <body>
 
-<div class="container">
+<div class="upload-container">
     <form class="file_form_class" action="" id="file_form" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <p class="form_class_name-field"> Загрузите файл с датами</p>
-        {{ form.file }}
-        <p class="form_class_name-field">Заменить исходный файл?</p>
-        {{ form.force }}
+        <p class="form_class_name-field"> Загрузите xml-файл с праздничными датами</p>
+        <div class="upload_panel">
+            {{ form.file }}
+            <div>
+                {{ form.force }}
+                <label class="checkbox-row" for="subscribeNews">Заменить файл для этого же года?</label>
+            </div>
+        </div>
+
     </form>
     <div class="auth__column_right__form_footer">
     <label class="form_footer_button-submit">
-      <input type="submit" form="file_form" value="">
-      <div class="auth__button_submit" id="submit-btn" ><span>&#10004</span></div>
+      <input type="submit" form="file_form" value="" style="display: none">
+      <div class="auth__button_submit" id="submit-btn" >
+          <span>&#10004</span>
+      </div>
     </label>
     <label class="form_footer_button-cancel">
         <a href={% url "main" %}>
@@ -59,16 +67,7 @@
         });
     }
 
-
-
-
-
     const body = document.getElementsByClassName('container')[0];
-
-    function deleteMessageBlock(event) {
-        event.preventDefault();
-        document.getElementById('id_new_edit_block').remove();
-    }
 
     const token = getCookie('csrftoken');
 

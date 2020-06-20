@@ -11,12 +11,22 @@
     <title>Производственный календарь</title>
 </head>
 <body>
-<p>Hello World!</p>
+<div class="container">
+    <div class="get_back">
+        <a href="{% url 'main' %}">На главную</a>
+    </div>
 
-{{ calendarik }}
+    {{ calendarik }}
 
-<a href="{% url "upload_new_year" %}">Upload new year</a>
-
+    <div class="legend">
+        <p>Легенда</p>
+        <div style="display: flex"><span> 21 </span> <p>- Рабочий день</p></div>
+        <div style="display: flex"><span id="1"> 21 </span> <p>- Праздничный день</p></div>
+        <div style="display: flex"><span id="2"> 21 </span> <p>- Сокращённый рабочий день</p></div>
+        <div style="display: flex"><span id="3"> 21 </span> <p>- Рабочий выходной день</p></div>
+        <div style="display: flex"><span id="4"> 21 </span> <p>- Выходной день</p></div>
+    </div>
+</div>
 </body>
 
 </html>

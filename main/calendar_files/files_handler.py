@@ -3,7 +3,7 @@ import os
 import pickle
 
 
-def uploaded_file_check(file):
+def uploaded_file_check(file, force):
     if file.content_type != 'text/xml':
         return "Неправильный xml-файл"
     with open('main/calendar_files/temp.xml', 'wb+') as f:
@@ -16,18 +16,20 @@ def uploaded_file_check(file):
     with open('main/calendar_files/presented_years.txt', 'rb+') as li:
         v = pickle.load(li)
         if int(year) in v:
-            return "Такой файл уже существует"
+            if force:
+                rewrite()
+                return "Перезаписан"
+            else:
+                return "Такой файл уже существует"
         else:
             v.append(int(year))
             v.sort()
     with open('main/calendar_files/presented_years.txt', 'wb+') as li:
         pickle.dump(v, li)
-    os.rename(r'main/calendar_files/temp.xml', r'main/calendar_files/calendar' + year + '.xml')
+
+    os.rename('main/calendar_files/temp.xml', 'main/calendar_files/calendar' + year + '.xml')
+
     return False
-
-
-def handle_uploaded_file(file):
-    pass
 
 
 def rewrite():

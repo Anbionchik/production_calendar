@@ -32,11 +32,11 @@ def upload_new_year_view(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-
-            result = uploaded_file_check(request.FILES['file'])
+            force_upload = request.POST.get('force')
+            result = uploaded_file_check(request.FILES['file'], force_upload)
             if result:
                 return HttpResponse(result)
-        return HttpResponseRedirect('/')
+        return HttpResponse("Успешно")
     else:
         form = UploadFileForm()
     return render(request, 'upload_file.html', {'form': form})

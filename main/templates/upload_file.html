@@ -87,57 +87,6 @@
         return cookieValue;
     }
 
-
-    function sbmtFunction(event) {
-        event.preventDefault();
-        debugger
-        const url = event.currentTarget.baseURI;
-        fetch(url, {
-            method: 'POST',
-            headers: new Headers({'X-CSRFToken': token}),
-            redirect: 'follow',
-        }).then(response => {
-            if (response.status === 201) {
-            } else {
-                alert('Сервер не доступен');
-            }
-        })
-
-    }
-
-    function createMessageBlock(title, text) {
-        const divBlock = document.createElement('div');
-        divBlock.className = 'wrapper__auth';
-        divBlock.id = 'id_new_edit_block';
-        divBlock.innerHTML = `<div class="auth__column_right">
-	<div class="auth__column_right_form">
-		<div class="auth__column_right_form__header">
-			${ title }
-		</div>
-		<div id="message_text">
-			${ text }
-		</div>
-		<div class="auth__column_right__form_footer">
-			<label class="form_footer_button-submit">
-				<a href="#" id="confirm-submit_btn">
-					<div id="confirm-submit-btn" class="auth__button_submit"  >
-						<span>&#10004</span>
-					</div>
-				</a>
-			</label>
-			<label class="form_footer_button-cancel">
-				<a href="#" id="confirm-cancel-btn">
-					<div class="auth__button_submit" id="confirm-cancel-btn" >
-						<span>&#9587</span>
-					</div>
-				</a>
-			</label>
-		</div>
-	</div>
-</div>`;
-        return divBlock;
-    }
-
 </script>
 
 </body>

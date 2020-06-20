@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <title>Загрузить xml-файл</title>
+</head>
+<body>
+
+<div class="upload-container">
+    <form class="file_form_class" action="" id="file_form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p class="form_class_name-field"> Загрузите xml-файл с праздничными датами</p>
+        <div class="upload_panel">
+            {{ form.file }}
+            <div>
+                {{ form.force }}
+                <label class="checkbox-row" for="subscribeNews">Заменить файл для этого же года?</label>
+            </div>
+        </div>
+
+    </form>
+    <div class="auth__column_right__form_footer">
+    <label class="form_footer_button-submit">
+      <input type="submit" form="file_form" value="" style="display: none">
+      <div class="auth__button_submit" id="submit-btn" >
+          <span>&#10004</span>
+      </div>
+    </label>
+    <label class="form_footer_button-cancel">
+        <a href={% url "main" %}>
+            <div class="auth__button_cancel" id="cancel-btn" ><span>&#9587</span></div>
+        </a>
+    </label>
+  </div>
+</div>
+
+
+
+<script>
+
+
+    file_form.onsubmit = async (e) => {
+        e.preventDefault();
+        debugger
+        fetch(e.currentTarget.baseURI, {
+            method: 'POST',
+            headers: new Headers({'X-CSRFToken': token}),
+            body: new FormData(file_form)
+        }).then(function(response) {
+            response.text().then(function (text) {
+                if (text == "Неправильный xml-файл") {
+                    alert("Загруженный файл должен иметь формат xml и соответсвовать шаблону. Загрузите повторно.")
+                } else if (text == "Такой файл уже существует") {
+                    alert(text)
+                } else if (text == "Перезаписан") {
+                    alert("Исходный файл был заменён загруженным")
+                    location.replace('/')
+                } else if (text == "Успешно") {
+                    alert("Файл был успешно загружен")
+                    location.replace('/')
+                }
+            });
+        });
+    }
+
+    const body = document.getElementsByClassName('container')[0];
+
+    const token = getCookie('csrftoken');
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            let cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+</script>
+
+</body>
+
+</html>

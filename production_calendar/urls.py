@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from main.views import main_view
+from main.views import main_view, upload_new_year_view, show_year_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', main_view, 'main')
+    path('', main_view, name='main'),
+    path('upload/', upload_new_year_view, name='upload_new_year'),
+    path('year/<int:pk>', show_year_view, name='show_year'),
 ]

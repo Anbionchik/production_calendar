@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'production_calendar.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": "127.0.0.1",
+        "NAME": "Data_for_calendar",
+        "USER": "postgres",
+        "PASSWORD": "Ankay1996",
+        "PORT": 5432
     }
 }
 
@@ -120,3 +124,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'FORM_METHOD_OVERRIDE': None,
+    'FORM_CONTENT_OVERRIDE': None,
+    'FORM_CONTENTTYPE_OVERRIDE': None
+}
